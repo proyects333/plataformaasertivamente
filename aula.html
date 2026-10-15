@@ -1,0 +1,169 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aula virtual | AsertivaMente</title><link rel="stylesheet" href="assets/css/aula.css?v=20261015-3"></head><body><!-- ===== LOGIN (modal sobre la landing) ===== -->
+<div id="login" class="show">
+  <div class="login-card">
+    <a class="aula-back" href="index.html">← Volver al sitio</a>
+    <img src="assets/img/logo.jpg" alt="Asertiva Mente">
+    <h1>Tu espacio para<br><span>seguir creciendo.</span></h1>
+    <p class="sub">Ingresa a tu aula virtual de AsertivaMente.</p>
+    <input type="email" id="l-email" aria-label="Correo electrónico" placeholder="Correo electrónico">
+    <input type="password" id="l-pass" aria-label="Contraseña" placeholder="Contraseña">
+    <button class="btn" onclick="login()">Iniciar sesión</button>
+    <div id="login-msg" role="status"></div>
+    <button class="link" onclick="toggleReg()">¿No tienes cuenta? Regístrate</button>
+    <div id="reg-fields" style="display:none; margin-top:14px;">
+      <input type="text" id="r-nombre" aria-label="Nombre completo" placeholder="Nombre completo">
+      <input type="email" id="r-email" aria-label="Correo de registro" placeholder="Correo electrónico">
+      <input type="password" id="r-pass" aria-label="Contraseña de registro" placeholder="Contraseña">
+      <button class="btn" style="background:var(--verde)" onclick="register()">Crear cuenta</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div class="app" id="app" style="display:none">
+  <aside class="sidebar">
+    <div class="brand">
+      <img src="assets/img/logo.jpg" alt="logo">
+      <h2>Asertiva <span>Mente</span></h2>
+      <small>CENTRO PSICOLÓGICO</small>
+    </div>
+    <nav class="menu">
+      <a data-v="dashboard" onclick="go('dashboard')"><span class="icon">🏠</span><span class="txt">Inicio</span></a>
+      <a data-v="cursos" onclick="go('cursos')"><span class="icon">📚</span><span class="txt">Mis cursos</span></a>
+      <a data-v="certificados" onclick="go('certificados')"><span class="icon">🎓</span><span class="txt">Certificados</span></a>
+      <a id="menu-admin" data-v="admin" onclick="go('admin')" style="display:none"><span class="icon">⚙️</span><span class="txt">Administrar</span></a>
+      <a onclick="logout()"><span class="icon">🚪</span><span class="txt">Cerrar sesión</span></a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <input id="aula-search" type="search" aria-label="Buscar cursos" placeholder="Buscar cursos…">
+      <div class="user-chip">
+        <div class="avatar" id="u-avatar">C</div>
+        <div><b id="u-nombre">—</b><small id="u-rol">Estudiante</small></div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section id="vista-dashboard" class="vista">
+      <div class="hero">
+        <div>
+          <h1>¡Hola, <span id="hero-nombre">—</span>! 👋</h1>
+          <p>Bienvenido a tu plataforma de cursos de Asertiva Mente.<br>Aprende a tu ritmo, accede a las clases y obtén tus certificados.</p>
+          <button class="btn btn-inline" onclick="go('cursos')">Continuar aprendiendo →</button>
+        </div>
+        <img src="assets/img/logo.jpg" style="width:150px;border-radius:50%;opacity:.9">
+      </div>
+      <h2 class="section-title">Mis cursos</h2>
+      <div class="grid-cursos" id="grid-cursos"></div>
+    </section>
+
+    <!-- CURSOS -->
+    <section id="vista-cursos" class="vista" style="display:none">
+      <h2 class="section-title">Todos los cursos</h2>
+      <div class="grid-cursos" id="grid-cursos2"></div>
+    </section>
+
+    <!-- REPRODUCTOR -->
+    <section id="vista-player" class="vista" style="display:none">
+      <span class="back" onclick="go('dashboard')">← Volver a mis cursos</span>
+      <h2 class="section-title" id="curso-titulo">—</h2>
+      <div class="player-wrap">
+        <div class="player">
+          <div id="p-video"></div>
+          <h2 id="p-titulo">—</h2>
+          <p class="desc" id="p-desc"></p>
+          <a class="btn-pdf" id="p-pdf" target="_blank">📄 Ver material PDF</a>
+          <button class="btn btn-complete" id="btn-completar" onclick="completarClase()">✓ Marcar clase como completada</button>
+        </div>
+        <div class="lista-clases" id="lista-clases"></div>
+      </div>
+    </section>
+
+    <!-- CERTIFICADOS -->
+    <section id="vista-certificados" class="vista" style="display:none">
+      <h2 class="section-title">Mis Certificados 🎓</h2>
+      <div class="grid-cursos" id="grid-cert"></div>
+    </section>
+
+    <!-- ADMIN / PROFESOR -->
+    <section id="vista-admin" class="vista" style="display:none">
+      <h2 class="section-title" id="admin-titulo">Panel de administración ⚙️</h2>
+
+      <!-- SOLO ADMIN: crear usuario -->
+      <div class="form-admin admin-only">
+        <h3>👤 Crear usuario (estudiante o profesor)</h3>
+        <div class="row2">
+          <input id="nu-nombre" placeholder="Nombre completo">
+          <input id="nu-email" type="email" placeholder="Correo electrónico">
+        </div>
+        <div class="row2">
+          <input id="nu-pass" type="password" placeholder="Contraseña">
+          <select id="nu-rol">
+            <option value="estudiante">Estudiante</option>
+            <option value="profesor">Profesor</option>
+          </select>
+        </div>
+        <button class="btn" style="width:auto" onclick="crearUsuario()">Crear usuario</button>
+      </div>
+
+      <!-- SOLO ADMIN: estudiantes -->
+      <div class="form-admin admin-only">
+        <h3>🎓 Estudiantes y usuarios</h3>
+        <table class="admin">
+          <thead><tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Cursos</th><th>Clases hechas</th><th>Registrado</th></tr></thead>
+          <tbody id="tabla-usuarios"></tbody>
+        </table>
+      </div>
+
+      <!-- SOLO ADMIN: asignar profesor a curso -->
+      <div class="form-admin admin-only">
+        <h3>📌 Asignar profesor a un curso</h3>
+        <div class="row2">
+          <select id="a-curso"></select>
+          <select id="a-prof"></select>
+        </div>
+        <button class="btn" style="width:auto;background:var(--verde)" onclick="asignarProfesor()">Asignar</button>
+      </div>
+
+      <!-- ADMIN Y PROFESOR: crear curso -->
+      <div class="form-admin">
+        <h3>➕ Crear curso <small style="color:var(--gris);font-weight:400">(el profesor lo crea para sí mismo)</small></h3>
+        <input id="nc-titulo" placeholder="Título del curso">
+        <textarea id="nc-desc" placeholder="Descripción"></textarea>
+        <input id="nc-img" placeholder="URL de imagen de portada (opcional)">
+        <button class="btn" style="width:auto" onclick="crearCurso()">Crear curso</button>
+      </div>
+
+      <!-- ADMIN Y PROFESOR: agregar/editar clase -->
+      <div class="form-admin">
+        <h3 id="clase-form-titulo">➕ Agregar clase (pega la URL de YouTube y el link de Drive)</h3>
+        <input type="hidden" id="nl-id">
+        <select id="f-curso"></select>
+        <input id="nl-titulo" placeholder="Título de la clase (ej: Clase 1: ¿Qué es el estrés?)">
+        <textarea id="nl-desc" placeholder="Descripción de la clase"></textarea>
+        <input id="nl-video" placeholder="🔗 URL del video de YouTube">
+        <input id="nl-pdf" placeholder="🔗 Link del PDF en Google Drive (opcional)">
+        <div class="row2">
+          <input id="nl-orden" type="number" placeholder="Orden (1,2,3...)">
+          <input id="nl-dur" placeholder="Duración (ej: 22:15)">
+        </div>
+        <button class="btn" style="width:auto;background:var(--verde)" id="btn-guardar-clase" onclick="guardarClase()">Agregar clase</button>
+        <button class="mini-btn" style="display:none;background:#95a5a6;color:#fff" id="btn-cancelar-edit" onclick="cancelarEdicion()">Cancelar edición</button>
+      </div>
+
+      <!-- ADMIN Y PROFESOR: lista de clases para editar/eliminar -->
+      <div class="form-admin">
+        <h3>✏️ Editar clases de un curso</h3>
+        <select id="pc-curso" onchange="cargarClasesAdmin()"></select>
+        <table class="admin" style="margin-top:10px">
+          <thead><tr><th>#</th><th>Título</th><th>Video</th><th>PDF</th><th>Duración</th><th>Acciones</th></tr></thead>
+          <tbody id="tabla-clases"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>let CLASE_IDX=0;function toggleReg(){const r=document.getElementById("reg-fields");r.style.display=r.style.display==="none"?"block":"none";}</script><script src="assets/js/app.js?v=20261015-3"></script></body></html>
