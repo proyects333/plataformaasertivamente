@@ -81,16 +81,21 @@ function showApp() {
       document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'none');
     }
   }
+  $('#profile-name').textContent = USUARIO.nombre || '—';
+  $('#profile-email').textContent = USUARIO.email || 'No disponible';
+  $('#profile-role').textContent = $('#u-rol').textContent;
+  $('#profile-avatar').textContent = USUARIO.nombre?.[0]?.toUpperCase() || 'A';
   go('dashboard');
 }
 
 /* ---------- navegación ---------- */
 function go(vista) {
   document.querySelectorAll('.vista').forEach(v => v.style.display = 'none');
-  document.querySelectorAll('.menu a').forEach(a => a.classList.remove('active'));
+  document.querySelectorAll('.menu [data-v]').forEach(a => a.classList.remove('active'));
   $('#vista-' + vista).style.display = 'block';
-  const link = document.querySelector(`.menu a[data-v="${vista}"]`);
+  const link = document.querySelector(`.menu [data-v="${vista}"]`);
   if (link) link.classList.add('active');
+  $('.topbar').style.display = ['dashboard','cursos'].includes(vista) ? 'flex' : 'none';
   if (vista === 'dashboard') loadDashboard();
   if (vista === 'cursos') loadCursos();
   if (vista === 'certificados') loadCertificados();
@@ -117,16 +122,16 @@ function loadDashboard() {
 }
 function renderCursos(container) {
   const query=($('#aula-search').value||'').toLocaleLowerCase('es');
-  container.innerHTML = CURSOS.filter(c=>(c.titulo||'').toLocaleLowerCase('es').includes(query)).map(c => {
+  container.innerHTML = CURSOS.filter(c => { const filter=$('#progress-filter').value; const done=Number(c.total_clases)>0 && Number(c.completadas)>=Number(c.total_clases); return (container.id!=='grid-cursos' || Number(c.inscrito)===1) && (c.titulo||'').toLocaleLowerCase('es').includes(query) && (filter==='all' || (filter==='done' ? done : !done)); }).map(c => {
     const pct = c.total_clases ? Math.round(c.completadas / c.total_clases * 100) : 0;
-    return `<div class="curso-card" onclick="openCurso(${c.id})">
-      <img src="${c.imagen || 'assets/img/logo.jpg'}" alt="">
+    return `<div class="curso-card" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCurso(${c.id})}" onclick="openCurso(${c.id})">
+      <img src="${c.imagen || 'assets/img/formacion.jpg'}" alt="">
       <div class="body">
         <h3>${c.titulo}</h3><p>${c.descripcion || ''}</p>
         <div class="progress"><div style="width:${pct}%"></div></div>
         <div class="meta"><span>${c.completadas} de ${c.total_clases} clases</span><span>${pct}%</span></div>
       </div></div>`;
-  }).join('') || '<div class="empty">No hay cursos para mostrar.</div>';
+  }).join('') || `<div class="empty account-empty"><span class="empty-symbol">▤</span><h3>No hay cursos para mostrar</h3><p>Explora los cursos disponibles o cambia los filtros.</p><button class="btn btn-inline" onclick="document.querySelector('#progress-filter').value='all';document.querySelector('#aula-search').value='';go('cursos')">Explorar cursos</button></div>`;
 }
 
 /* ---------- reproductor ---------- */
@@ -287,5 +292,6 @@ async function eliminarClase(id) {
 
 $('#aula-search')?.addEventListener('input',()=>{renderCursos($('#grid-cursos'));renderCursos($('#grid-cursos2'));});
 $('#l-pass').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
+$('#progress-filter').addEventListener('change',()=>{renderCursos($('#grid-cursos'));renderCursos($('#grid-cursos2'));});
 /* arranque */
 init();

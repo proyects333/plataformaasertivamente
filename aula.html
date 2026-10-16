@@ -1,4 +1,4 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aula virtual | AsertivaMente</title><link rel="stylesheet" href="assets/css/aula.css?v=20261015-3"></head><body><!-- ===== LOGIN (modal sobre la landing) ===== -->
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aula virtual | AsertivaMente</title><link rel="stylesheet" href="assets/css/aula.css?v=20261016-2"></head><body><!-- ===== LOGIN (modal sobre la landing) ===== -->
 <div id="login" class="show">
   <div class="login-card">
     <a class="aula-back" href="index.html">← Volver al sitio</a>
@@ -21,47 +21,21 @@
 
 <!-- ===== APP ===== -->
 <div class="app" id="app" style="display:none">
-  <aside class="sidebar">
-    <div class="brand">
-      <img src="assets/img/logo.jpg" alt="logo">
-      <h2>Asertiva <span>Mente</span></h2>
-      <small>CENTRO PSICOLÓGICO</small>
-    </div>
-    <nav class="menu">
-      <a data-v="dashboard" onclick="go('dashboard')"><span class="icon">🏠</span><span class="txt">Inicio</span></a>
-      <a data-v="cursos" onclick="go('cursos')"><span class="icon">📚</span><span class="txt">Mis cursos</span></a>
-      <a data-v="certificados" onclick="go('certificados')"><span class="icon">🎓</span><span class="txt">Certificados</span></a>
-      <a id="menu-admin" data-v="admin" onclick="go('admin')" style="display:none"><span class="icon">⚙️</span><span class="txt">Administrar</span></a>
-      <a onclick="logout()"><span class="icon">🚪</span><span class="txt">Cerrar sesión</span></a>
-    </nav>
-  </aside>
-
+  <header class="account-header"><div class="account-header-inner"><a class="account-brand" href="index.html"><img src="assets/img/logo.jpg" alt=""><b>Asertiva<span>Mente</span></b></a><nav aria-label="Navegación"><a href="nosotros.html">Nosotros</a><a href="programas.html">Programas</a><a href="metodologia.html">Metodología</a><button class="account-exit" onclick="logout()">Cerrar sesión</button></nav><div class="user-chip"><div class="avatar" id="u-avatar">A</div><div><b id="u-nombre">—</b><small id="u-rol">Estudiante</small></div></div></div></header>
   <main class="main">
-    <div class="topbar">
-      <input id="aula-search" type="search" aria-label="Buscar cursos" placeholder="Buscar cursos…">
-      <div class="user-chip">
-        <div class="avatar" id="u-avatar">C</div>
-        <div><b id="u-nombre">—</b><small id="u-rol">Estudiante</small></div>
-      </div>
-    </div>
-
+    <h1 class="account-title">Mi cuenta</h1>
+    <nav class="menu account-tabs" aria-label="Secciones de mi cuenta"><button data-v="dashboard" onclick="go('dashboard')">Mis cursos</button><button data-v="perfil" onclick="go('perfil')">Perfil</button><button data-v="certificados" onclick="go('certificados')">Certificados</button><button data-v="cursos" onclick="go('cursos')">Explorar cursos</button><button id="menu-admin" data-v="admin" onclick="location.href='admin.html'" style="display:none">Administrar</button></nav>
+    <div class="topbar"><input id="aula-search" type="search" aria-label="Buscar cursos" placeholder="Buscar en mis cursos…"><label class="progress-filter">Mostrar <select id="progress-filter" aria-label="Filtrar por progreso"><option value="all">Todos</option><option value="pending">En progreso</option><option value="done">Completados</option></select></label></div>
+    <section id="vista-perfil" class="vista" style="display:none"><div class="profile-layout"><div><h2>Información de tu cuenta</h2><p>Consulta los datos con los que accedes a AsertivaMente.</p></div><div class="profile-panel"><div class="profile-avatar" id="profile-avatar">A</div><dl><dt>Nombre completo</dt><dd id="profile-name">—</dd><dt>Correo electrónico</dt><dd id="profile-email">—</dd><dt>Rol</dt><dd id="profile-role">—</dd></dl><p class="profile-note">Para actualizar tus datos, comunícate con la administración de AsertivaMente.</p></div></div></section>
     <!-- DASHBOARD -->
     <section id="vista-dashboard" class="vista">
-      <div class="hero">
-        <div>
-          <h1>¡Hola, <span id="hero-nombre">—</span>! 👋</h1>
-          <p>Bienvenido a tu plataforma de cursos de Asertiva Mente.<br>Aprende a tu ritmo, accede a las clases y obtén tus certificados.</p>
-          <button class="btn btn-inline" onclick="go('cursos')">Continuar aprendiendo →</button>
-        </div>
-        <img src="assets/img/logo.jpg" style="width:150px;border-radius:50%;opacity:.9">
-      </div>
-      <h2 class="section-title">Mis cursos</h2>
+      <div class="account-greeting"><span>Hola, <b id="hero-nombre">—</b></span><p>Continúa aprendiendo desde donde te quedaste.</p></div>
       <div class="grid-cursos" id="grid-cursos"></div>
     </section>
 
     <!-- CURSOS -->
     <section id="vista-cursos" class="vista" style="display:none">
-      <h2 class="section-title">Todos los cursos</h2>
+      <h2 class="section-title">Explorar cursos</h2>
       <div class="grid-cursos" id="grid-cursos2"></div>
     </section>
 
@@ -83,7 +57,7 @@
 
     <!-- CERTIFICADOS -->
     <section id="vista-certificados" class="vista" style="display:none">
-      <h2 class="section-title">Mis Certificados 🎓</h2>
+      <h2 class="section-title">Mis certificados</h2>
       <div class="grid-cursos" id="grid-cert"></div>
     </section>
 
@@ -166,4 +140,4 @@
   </main>
 </div>
 
-<script>let CLASE_IDX=0;function toggleReg(){const r=document.getElementById("reg-fields");r.style.display=r.style.display==="none"?"block":"none";}</script><script src="assets/js/app.js?v=20261015-3"></script></body></html>
+<script>let CLASE_IDX=0;function toggleReg(){const r=document.getElementById("reg-fields");r.style.display=r.style.display==="none"?"block":"none";}</script><script src="assets/js/app.js?v=20261016-2"></script></body></html>
